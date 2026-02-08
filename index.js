@@ -7,9 +7,14 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const dotenv = require("dotenv");
 const PORT = 3000;
 
-dotenv.config();
+const geminiKey = process.env.GEMINI_API_KEY;
+if (!geminiKey) {
+  throw new Error("GEMINI_API_KEY is not defined. Did you set it in Vercel?");
+}
+const genAI = new GoogleGenerativeAI(geminiKey);
+
 const upload = multer({ storage: multer.memoryStorage() });
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
@@ -111,3 +116,4 @@ Summarize in plain text.
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
